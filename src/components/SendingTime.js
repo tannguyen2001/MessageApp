@@ -1,9 +1,11 @@
 import {View, Text} from 'react-native';
 
-function SendingTime() {
+function SendingTime({timestamp}) {
+  console.log(timestamp);
+
   return (
     <View style={{margin: 4}}>
-      <Text style={{textAlign: 'center', fontSize: 14}}>10:28 SA</Text>
+      <Text style={{textAlign: 'center', fontSize: 14}}>{timestamp}</Text>
     </View>
   );
 }

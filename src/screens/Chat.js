@@ -1,4 +1,4 @@
-import {View, Text} from 'react-native';
+import {View, Text, FlatList} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import Message from '../components/Message';
@@ -137,7 +137,11 @@ messages = [
 
 function Chat() {
   return (
-    <View style={{paddingVertical: 20, paddingHorizontal: 10}}>
+    <View
+      style={{
+        paddingVertical: 20,
+        paddingHorizontal: 10,
+      }}>
       <View
         style={{
           flexDirection: 'row',
@@ -161,8 +165,12 @@ function Chat() {
           <Icon name="videocam" size={24} color="#006AFF" />
         </View>
       </View>
-      <View style={{marginTop: 12}}>
-        <Message />
+      <View style={{marginTop: 12, paddingBottom: 60, alignItems: 'flex-end'}}>
+        <FlatList
+          data={messages}
+          renderItem={message => <Message message={message.item} />}
+          keyExtractor={(item, index) => index}
+        />
       </View>
     </View>
   );

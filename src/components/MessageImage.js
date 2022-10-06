@@ -1,4 +1,5 @@
-import {View, Image} from 'react-native';
+import {View, Image, Pressable} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 imageUrls = [
   {
@@ -27,7 +28,16 @@ imageUrl = [
   'https://media.istockphoto.com/photos/mountains-at-sunrise-the-dolomites-in-south-tyrol-italy-picture-id690356910?b=1&k=20&m=690356910&s=170667a&w=0&h=eHUsA1LUqLDnIUbL-FZ1AuoopZbIjhQyiQyZrZ7RFAw=',
 ];
 
-function MessageImage() {
+function MessageImage({attachments}) {
+  const navigation = useNavigation();
+
+  const lengthImages = attachments.length;
+
+  function renderImages() {
+    if (lengthImages >= 2) {
+    }
+  }
+
   return (
     <View style={{marginVertical: 4}}>
       {/* <Image
@@ -43,13 +53,18 @@ function MessageImage() {
           flexWrap: 'wrap',
         }}>
         {imageUrls.map(item => (
-          <Image
-            source={{
-              uri: 'https://media.istockphoto.com/photos/mountains-at-sunrise-the-dolomites-in-south-tyrol-italy-picture-id690356910?b=1&k=20&m=690356910&s=170667a&w=0&h=eHUsA1LUqLDnIUbL-FZ1AuoopZbIjhQyiQyZrZ7RFAw=',
-            }}
-            style={{width: 60, height: 60, borderRadius: 4, margin: 1}}
+          <Pressable
             key={item.id}
-          />
+            onPress={() => {
+              navigation.navigate('ImageDetail');
+            }}>
+            <Image
+              source={{
+                uri: 'https://media.istockphoto.com/photos/mountains-at-sunrise-the-dolomites-in-south-tyrol-italy-picture-id690356910?b=1&k=20&m=690356910&s=170667a&w=0&h=eHUsA1LUqLDnIUbL-FZ1AuoopZbIjhQyiQyZrZ7RFAw=',
+              }}
+              style={{width: 60, height: 60, borderRadius: 4, margin: 1}}
+            />
+          </Pressable>
         ))}
       </View>
     </View>
