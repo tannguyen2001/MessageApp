@@ -1,7 +1,18 @@
-import {View, Text, FlatList} from 'react-native';
+import {View, Text, FlatList, TextInput, Button, Pressable} from 'react-native';
+
+import {useEffect, useRef, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import Message from '../components/Message';
+
+const convertTime = time => {
+  let date = time.getDate();
+  let month = time.getMonth() + 1;
+  let year = time.getFullYear();
+  let hour = time.getHours();
+  let minute = time.getMinutes();
+  return `${year}/${month}/${date} ${hour}:${minute}`;
+};
 
 messages = [
   {
@@ -9,6 +20,7 @@ messages = [
       {
         url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/640px-Image_created_with_a_mobile_phone.png',
       },
+      {url: 'https://lokeshdhakar.com/projects/lightbox2/images/image-5.jpg'},
       {url: 'https://lokeshdhakar.com/projects/lightbox2/images/image-5.jpg'},
     ],
     message: '',
@@ -26,7 +38,7 @@ messages = [
   {
     attachments: [
       {
-        url: 'https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg',
+        url: 'https://taimienphi.vn/tmp/cf/aut/anh-gai-xinh-1.jpg',
       },
     ],
     message: '',
@@ -136,17 +148,40 @@ messages = [
 ];
 
 function Chat() {
+  const [dataMessase, setDataMesase] = useState([]);
+  const [txtMessage, setTxtMessage] = useState('');
+
+  useEffect(() => {
+    setDataMesase(messages);
+  }, []);
+
+  function handlerSendBtn() {
+    let now = convertTime(new Date());
+
+    setDataMesase(prevData => [
+      {
+        attachments: [],
+        message: txtMessage,
+        timestamp: now,
+      },
+      ...prevData,
+    ]);
+
+    setTxtMessage('');
+  }
+
   return (
     <View
       style={{
-        paddingVertical: 20,
         paddingHorizontal: 10,
+        flex: 1,
       }}>
       <View
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
+          flex: 1,
         }}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Icon name="arrow-back-ios" size={20} color="#006AFF" />
@@ -165,12 +200,65 @@ function Chat() {
           <Icon name="videocam" size={24} color="#006AFF" />
         </View>
       </View>
-      <View style={{marginTop: 12, paddingBottom: 60, alignItems: 'flex-end'}}>
+      <View
+        style={{
+          marginTop: 12,
+          flex: 9,
+        }}>
         <FlatList
-          data={messages}
+          data={dataMessase}
           renderItem={message => <Message message={message.item} />}
           keyExtractor={(item, index) => index}
+          style={{width: '100%'}}
+          contentContainerStyle={{flexDirection: 'column-reverse'}}
         />
+      </View>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginTop: 16,
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            width: 100,
+            justifyContent: 'space-between',
+          }}>
+          <Icon name="location-on" size={28} color={'#00B2FF'} />
+          <Icon name="camera-alt" size={28} color={'#00B2FF'} />
+          <Icon name="image" size={28} color={'#00B2FF'} />
+          <Icon name="mic" size={28} color={'#00B2FF'} />
+        </View>
+        <View
+          style={{
+            marginLeft: 16,
+            borderWidth: 1,
+            width: 2,
+            flexDirection: 'row',
+            alignItems: 'center',
+            borderRadius: 8,
+            justifyContent: 'space-between',
+            width: 208,
+            borderColor: '#00B2FF',
+          }}>
+          <TextInput
+            paddingHorizontal={8}
+            placeholder="Aa"
+            color="#00B2FF"
+            fontSize={16}
+            width={174}
+            value={txtMessage}
+            onChangeText={e => setTxtMessage(e)}
+          />
+          <Icon name="insert-emoticon" size={28} color={'#00B2FF'} />
+        </View>
+        <Pressable
+          onPress={handlerSendBtn}
+          style={{marginLeft: 'auto', marginRight: 4}}>
+          <Icon name="send" size={28} color={'#00B2FF'} />
+        </Pressable>
       </View>
     </View>
   );

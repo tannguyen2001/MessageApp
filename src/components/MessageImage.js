@@ -1,74 +1,64 @@
 import {View, Image, Pressable} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-
-imageUrls = [
-  {
-    id: 1,
-    uri: 'https://media.istockphoto.com/photos/mountains-at-sunrise-the-dolomites-in-south-tyrol-italy-picture-id690356910?b=1&k=20&m=690356910&s=170667a&w=0&h=eHUsA1LUqLDnIUbL-FZ1AuoopZbIjhQyiQyZrZ7RFAw=',
-  },
-  {
-    id: 2,
-    uri: 'https://media.istockphoto.com/photos/mountains-at-sunrise-the-dolomites-in-south-tyrol-italy-picture-id690356910?b=1&k=20&m=690356910&s=170667a&w=0&h=eHUsA1LUqLDnIUbL-FZ1AuoopZbIjhQyiQyZrZ7RFAw=',
-  },
-  {
-    id: 3,
-    uri: 'https://media.istockphoto.com/photos/mountains-at-sunrise-the-dolomites-in-south-tyrol-italy-picture-id690356910?b=1&k=20&m=690356910&s=170667a&w=0&h=eHUsA1LUqLDnIUbL-FZ1AuoopZbIjhQyiQyZrZ7RFAw=',
-  },
-  {
-    id: 4,
-    uri: 'https://media.istockphoto.com/photos/mountains-at-sunrise-the-dolomites-in-south-tyrol-italy-picture-id690356910?b=1&k=20&m=690356910&s=170667a&w=0&h=eHUsA1LUqLDnIUbL-FZ1AuoopZbIjhQyiQyZrZ7RFAw=',
-  },
-  {
-    id: 5,
-    uri: 'https://media.istockphoto.com/photos/mountains-at-sunrise-the-dolomites-in-south-tyrol-italy-picture-id690356910?b=1&k=20&m=690356910&s=170667a&w=0&h=eHUsA1LUqLDnIUbL-FZ1AuoopZbIjhQyiQyZrZ7RFAw=',
-  },
-];
-
-imageUrl = [
-  'https://media.istockphoto.com/photos/mountains-at-sunrise-the-dolomites-in-south-tyrol-italy-picture-id690356910?b=1&k=20&m=690356910&s=170667a&w=0&h=eHUsA1LUqLDnIUbL-FZ1AuoopZbIjhQyiQyZrZ7RFAw=',
-];
+import {useEffect, useState} from 'react';
+import AutoHeightImage from 'react-native-auto-height-image';
 
 function MessageImage({attachments}) {
   const navigation = useNavigation();
-
   const lengthImages = attachments.length;
 
   function renderImages() {
-    if (lengthImages >= 2) {
+    let ImageComponent = <></>;
+
+    if (lengthImages == 1) {
+      ImageComponent = (
+        <Pressable
+          onPress={() => {
+            navigation.navigate('ImageDetail', {
+              urlImage: attachments[0].url,
+            });
+          }}>
+          <AutoHeightImage
+            source={{
+              uri: attachments[0].url,
+            }}
+            width={200}
+          />
+        </Pressable>
+      );
     }
+
+    if (lengthImages >= 2) {
+      ImageComponent = (
+        <View
+          style={{
+            width: 200,
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+          }}>
+          {attachments.map((item, index) => (
+            <Pressable
+              key={index}
+              onPress={() => {
+                navigation.navigate('ImageDetail', {
+                  urlImage: item.url,
+                });
+              }}>
+              <Image
+                source={{
+                  uri: item.url,
+                }}
+                style={{width: 60, height: 60, borderRadius: 4, margin: 1}}
+              />
+            </Pressable>
+          ))}
+        </View>
+      );
+    }
+    return ImageComponent;
   }
 
-  return (
-    <View style={{marginVertical: 4}}>
-      {/* <Image
-        source={{
-          uri: 'https://media.istockphoto.com/photos/mountains-at-sunrise-the-dolomites-in-south-tyrol-italy-picture-id690356910?b=1&k=20&m=690356910&s=170667a&w=0&h=eHUsA1LUqLDnIUbL-FZ1AuoopZbIjhQyiQyZrZ7RFAw=',
-        }}
-        style={{width: 200, height: 360, borderRadius: 6}}
-      /> */}
-      <View
-        style={{
-          width: 200,
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-        }}>
-        {imageUrls.map(item => (
-          <Pressable
-            key={item.id}
-            onPress={() => {
-              navigation.navigate('ImageDetail');
-            }}>
-            <Image
-              source={{
-                uri: 'https://media.istockphoto.com/photos/mountains-at-sunrise-the-dolomites-in-south-tyrol-italy-picture-id690356910?b=1&k=20&m=690356910&s=170667a&w=0&h=eHUsA1LUqLDnIUbL-FZ1AuoopZbIjhQyiQyZrZ7RFAw=',
-              }}
-              style={{width: 60, height: 60, borderRadius: 4, margin: 1}}
-            />
-          </Pressable>
-        ))}
-      </View>
-    </View>
-  );
+  return <View>{renderImages()}</View>;
 }
 
 export default MessageImage;
